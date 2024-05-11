@@ -40,7 +40,8 @@ def tables_creator(con, con_status: int = 0, table_name_1: str = 'employers', ta
                             )''')
 
     except psycopg2.Error as e:
-        print('произошла', e)
+        print(f"произошла {e.pgerror}")
+        print(f"код ошибки: {e.pgcode}")
 
     finally:
         if con_status == 0:
@@ -48,7 +49,7 @@ def tables_creator(con, con_status: int = 0, table_name_1: str = 'employers', ta
                 con.close()
 
 
-def loads_into_table(con, vacansies: list):
+def loads_into_table(con, vacansies: list, con_status: int = 0):
     '''заполняет таблицу данными о вакансиях'''
     try:
         with con:
@@ -63,12 +64,14 @@ def loads_into_table(con, vacansies: list):
                                 (vac.employer_id, vac.region, vac.vacancy_name, vac.salary, vac.currency, vac.requirement, vac.vacancy_url))
 
     except psycopg2.Error as e:
-        print('произошла', e)
+        print(f"произошла {e.pgerror}")
+        print(f"код ошибки: {e.pgcode}")
+
 
     finally:
-        if con is not None:
-            con.close()
-
+        if con_status == 0:
+            if con is not None:
+                con.close()
 
 def drop_table(con, table_name, con_status: int = 0):
     '''удаляет таблицу. по умолчанию соединение закроется. если передать в con_status 1 то останется открытым'''
@@ -79,7 +82,8 @@ def drop_table(con, table_name, con_status: int = 0):
                 print(f'{red_col}из базы данных удалена таблица {table_name}{reset_red_col}')
 
     except psycopg2.Error as e:
-        print('произошла', e)
+        print(f"произошла {e.pgerror}")
+        print(f"код ошибки: {e.pgcode}")
 
     finally:
         if con_status == 0:

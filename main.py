@@ -9,9 +9,7 @@ from src.utils import loads_into_table
 from src.utils import drop_table
 
 
-con1 = connector('course_work_5_fj', '123')
-con2 = connector('course_work_5_fj', '123')
-con3 = connector('course_work_5_fj', '123')
+con = connector('course_work_5_fj', '123')
 
 red_col = '\033[91m'
 reset_red_col = '\033[0m'
@@ -31,9 +29,9 @@ def main():
     vacancies_list = hh_api_instance.vacancies
     parser_inst = VacanciesParser()
     vacancies_inst_list = parser_inst.parser_api_vacancies(vacancies_list)
-    tables_creator(con1, 1)
-    loads_into_table(con1, vacancies_inst_list)
-    db_man_inst = DBManager(con2)
+    tables_creator(con, 1)
+    loads_into_table(con, vacancies_inst_list,1)
+    db_man_inst = DBManager(con)
 
     while True:
 
@@ -81,5 +79,5 @@ def main():
 if __name__ == '__main__':
     main()
 
-drop_table(con3, 'vacancies', 1)
-drop_table(con3, 'employers')
+drop_table(con, 'vacancies', 1)
+drop_table(con, 'employers')

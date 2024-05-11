@@ -21,7 +21,8 @@ class DBManager():
                         print(f"компания - {''.join(i[0])}, количество вакансий - {i[1]}")
 
         except psycopg2.Error as e:
-            print('произошла', e)
+            print(f"произошла {e.pgerror}")
+            print(f"код ошибки: {e.pgcode}")
 
     def get_all_vacancies(self):
         ''''получает список всех вакансий с указанием названия компании,
@@ -36,7 +37,8 @@ class DBManager():
                         print(f'{i} \n {"-" * 200}')
 
         except psycopg2.Error as e:
-            print('произошла', e)
+            print(f"произошла {e.pgerror}")
+            print(f"код ошибки: {e.pgcode}")
 
     def get_avg_salary(self, currency: str = "RUR"):
         '''получает среднюю зарплату по вакансиям. по умолчанию "RUR" '''
@@ -45,7 +47,7 @@ class DBManager():
                 with self.con.cursor() as cur:
                     cur.execute(f"SELECT AVG(salary) "
                                 f"FROM vacancies "
-                                f"WHERE vacancies.currency = '{currency}'")
+                                f"WHERE vacancies.currency = %s", (currency, ))
                     rows = cur.fetchall()
                     decimal_value = rows[0][0]
                     if decimal_value is not None:
@@ -54,40 +56,43 @@ class DBManager():
                     else: print(f"{red_col}валюта {currency} отсутствует в базе данных! {reset_red_col}")
 
 
-
         except psycopg2.Error as e:
-            print('произошла', e)
+            print(f"произошла {e.pgerror}")
+            print(f"код ошибки: {e.pgcode}")
 
     def get_vacancies_with_higher_salary(self, currency: str = "RUR"):
         ''' получает список всех вакансий, у которых зарплата выше средней по всем вакансиям. по умолчанию "RUR"'''
         try:
             with self.con:
                 with self.con.cursor() as cur:
-                    cur.execute(f"SELECT * FROM vacancies WHERE currency = '{currency}' "
+                    cur.execute(f"SELECT * FROM vacancies WHERE currency = %s "
                                 f"AND salary > (SELECT AVG(salary) "
                                 f"FROM vacancies "
-                                f"WHERE currency = '{currency}')")
+                                f"WHERE currency = %s)", (currency, currency))
                     rows = cur.fetchall()
 
                     for i in rows:
                         print(f'{i} \n {"-" * 200}')
 
         except psycopg2.Error as e:
-            print('произошла', e)
+            print(f"произошла {e.pgerror}")
+            print(f"код ошибки: {e.pgcode}")
 
     def get_vacancies_with_keyword(self, keyword):
         '''получает список всех вакансий, в названии которых содержатся переданные в метод слова, например python.'''
         try:
             with self.con:
                 with self.con.cursor() as cur:
+                    like_pattern = f'%{keyword}%'
                     cur.execute(f"SELECT * FROM vacancies "
-                                f"WHERE vacancy LIKE '%{keyword}%'")
+                                f"WHERE vacancy LIKE %s", (like_pattern,))
                     rows = cur.fetchall()
                     for i in rows:
                         print(f'{i} \n {"-" * 200}')
 
         except psycopg2.Error as e:
-            print('произошла', e)
+            print(f"произошла {e.pgerror}")
+            print(f"код ошибки: {e.pgcode}")
 
     def get_all_currency(self):
         ''''получает список всех вакансий с указанием названия компании,
@@ -102,4 +107,11 @@ class DBManager():
                         print(f'{red_col}{', '.join(i)}{reset_red_col}')
 
         except psycopg2.Error as e:
-            print('произошла', e)
+            print(f"произошла {e.pgerror}")
+            print(f"код ошибки: {e.pgcode}")
+
+    def con_close(self):
+        '''закрывает соединение с БД'''
+        if self.con:
+            self.con.close()
+
