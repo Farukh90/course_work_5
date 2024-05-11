@@ -48,7 +48,7 @@ def tables_creator(con, con_status: int = 0, table_name_1: str = 'employers', ta
                 con.close()
 
 
-def loads_into_table(con, vacansies: list):
+def loads_into_table(con, vacansies: list, con_status: int = 0):
     '''заполняет таблицу данными о вакансиях'''
     try:
         with con:
@@ -65,10 +65,11 @@ def loads_into_table(con, vacansies: list):
     except psycopg2.Error as e:
         print('произошла', e)
 
-    finally:
-        if con is not None:
-            con.close()
 
+    finally:
+        if con_status == 0:
+            if con is not None:
+                con.close()
 
 def drop_table(con, table_name, con_status: int = 0):
     '''удаляет таблицу. по умолчанию соединение закроется. если передать в con_status 1 то останется открытым'''

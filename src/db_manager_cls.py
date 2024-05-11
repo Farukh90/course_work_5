@@ -54,7 +54,6 @@ class DBManager():
                     else: print(f"{red_col}валюта {currency} отсутствует в базе данных! {reset_red_col}")
 
 
-
         except psycopg2.Error as e:
             print('произошла', e)
 
@@ -104,3 +103,9 @@ class DBManager():
 
         except psycopg2.Error as e:
             print('произошла', e)
+
+    def con_close(self):
+        '''закрывает соединение с БД'''
+        if self.con:
+            self.con.close()
+
