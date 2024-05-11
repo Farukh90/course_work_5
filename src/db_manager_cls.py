@@ -45,7 +45,7 @@ class DBManager():
                 with self.con.cursor() as cur:
                     cur.execute(f"SELECT AVG(salary) "
                                 f"FROM vacancies "
-                                f"WHERE vacancies.currency = '{currency}'")
+                                f"WHERE vacancies.currency = %s", (currency, ))
                     rows = cur.fetchall()
                     decimal_value = rows[0][0]
                     if decimal_value is not None:
@@ -63,10 +63,10 @@ class DBManager():
         try:
             with self.con:
                 with self.con.cursor() as cur:
-                    cur.execute(f"SELECT * FROM vacancies WHERE currency = '{currency}' "
+                    cur.execute(f"SELECT * FROM vacancies WHERE currency = %s "
                                 f"AND salary > (SELECT AVG(salary) "
                                 f"FROM vacancies "
-                                f"WHERE currency = '{currency}')")
+                                f"WHERE currency = %s)", (currency, currency))
                     rows = cur.fetchall()
 
                     for i in rows:
@@ -80,8 +80,9 @@ class DBManager():
         try:
             with self.con:
                 with self.con.cursor() as cur:
+                    like_pattern = f'%{keyword}%'
                     cur.execute(f"SELECT * FROM vacancies "
-                                f"WHERE vacancy LIKE '%{keyword}%'")
+                                f"WHERE vacancy LIKE %s", (like_pattern,))
                     rows = cur.fetchall()
                     for i in rows:
                         print(f'{i} \n {"-" * 200}')
