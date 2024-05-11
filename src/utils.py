@@ -40,7 +40,8 @@ def tables_creator(con, con_status: int = 0, table_name_1: str = 'employers', ta
                             )''')
 
     except psycopg2.Error as e:
-        print('произошла', e)
+        print(f"произошла {e.pgerror}")
+        print(f"код ошибки: {e.pgcode}")
 
     finally:
         if con_status == 0:
@@ -63,7 +64,8 @@ def loads_into_table(con, vacansies: list, con_status: int = 0):
                                 (vac.employer_id, vac.region, vac.vacancy_name, vac.salary, vac.currency, vac.requirement, vac.vacancy_url))
 
     except psycopg2.Error as e:
-        print('произошла', e)
+        print(f"произошла {e.pgerror}")
+        print(f"код ошибки: {e.pgcode}")
 
 
     finally:
@@ -80,7 +82,8 @@ def drop_table(con, table_name, con_status: int = 0):
                 print(f'{red_col}из базы данных удалена таблица {table_name}{reset_red_col}')
 
     except psycopg2.Error as e:
-        print('произошла', e)
+        print(f"произошла {e.pgerror}")
+        print(f"код ошибки: {e.pgcode}")
 
     finally:
         if con_status == 0:
