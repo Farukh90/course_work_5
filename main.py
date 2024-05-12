@@ -8,14 +8,15 @@ from src.utils import tables_creator
 from src.utils import loads_into_table
 from src.utils import drop_table
 
-
-con = connector('course_work_5_fj', '123')
-
 red_col = '\033[91m'
 reset_red_col = '\033[0m'
 
 def main():
     '''пользовательский интерфейс приложения'''
+    con = connector('db_config_file.ini')
+    drop_table(con, 'vacancies', 1)
+    drop_table(con, 'employers',1)
+
     hh_api_instance = HHApi()
 
     page_quantity = input('Введите количество запрашиваемых страниц от 1 до 20: ')
@@ -73,11 +74,11 @@ def main():
             db_man_inst.get_vacancies_with_keyword(user_input)
 
         elif user_choice and user_choice == '0' and user_choice in choice_number:
+            db_man_inst.con_close()
             break
 
 
 if __name__ == '__main__':
     main()
 
-drop_table(con, 'vacancies', 1)
-drop_table(con, 'employers')
+
