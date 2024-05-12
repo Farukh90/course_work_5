@@ -1,16 +1,20 @@
 import psycopg2
+import configparser
 
 red_col = '\033[91m'
 reset_red_col = '\033[0m'
 
 
-def connector(database: str = 'course_work_5_fj', password: str = '123', host: str = 'localhost', user: str = 'postgres'):
+def connector(config_file_path):
     '''коннектор для соединения с БД. при вызове можно передать другие аргументы '''
+    config = configparser.ConfigParser()
+    config.read(config_file_path)
+    database_config = dict(config.items('database'))
     conn = psycopg2.connect(
-        host=host,
-        database=database,
-        user=user,
-        password=password
+        host=database_config['host'],
+        database=database_config['database'],
+        user=database_config['user'],
+        password=database_config['password']
     )
     return conn
 
@@ -78,7 +82,7 @@ def drop_table(con, table_name, con_status: int = 0):
     try:
         with con:
             with con.cursor() as cur:
-                cur.execute(f"DROP TABLE {table_name}")
+                cur.execute(f"DROP TABLE IF EXISTS {table_name}")
                 print(f'{red_col}из базы данных удалена таблица {table_name}{reset_red_col}')
 
     except psycopg2.Error as e:
