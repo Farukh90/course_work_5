@@ -62,9 +62,9 @@ def loads_into_table(con, vacansies: list, con_status: int = 0):
                     cur.execute('INSERT INTO employers (employer_id, employer) VALUES '
                                 '(%s,%s)' 'ON CONFLICT (employer_id) DO NOTHING', (vac.employer_id, vac.employer_name))
 
-                    cur.execute(f'INSERT INTO vacancies '
-                                f'(employer_id, region, vacancy, salary, currency, requirement, vacancy_url) '
-                                f'VALUES ''(%s,%s,%s,%s,%s,%s,%s)',
+                    cur.execute('INSERT INTO vacancies '
+                                '(employer_id, region, vacancy, salary, currency, requirement, vacancy_url) '
+                                'VALUES ''(%s,%s,%s,%s,%s,%s,%s)',
                                 (vac.employer_id, vac.region, vac.vacancy_name, vac.salary, vac.currency, vac.requirement, vac.vacancy_url))
 
     except psycopg2.Error as e:
