@@ -67,7 +67,7 @@ class HHApi(Parser):
         self.params = {'text': '', 'employer_id': '', 'page': 0, 'per_page': 100, 'only_with_salary': 'true'}
         self.vacancies = []
 
-    def load_vacancies(self, keyword: str = '', page_quantity: int = 2):  # page_quantity задаем от 0  до 20
+    def load_vacancies(self, keyword: str = '', page_quantity: int = 2) -> None:  # page_quantity задаем от 0  до 20
         '''загружает данные c АПИ'''
         self.params['text'] = keyword
         self.params['employer_id'] = self.employers_data
@@ -83,7 +83,7 @@ class VacanciesParser():
     Класс для парсинга данных с АПИ
     """
 
-    def parser_api_vacancies(self, api_data: list):
+    def parser_api_vacancies(self, api_data: list) -> list[Vacancy]:
         '''парсит данные c апи по определенным критериям'''
         vacancies_list = []
 
