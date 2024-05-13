@@ -115,3 +115,22 @@ class DBManager():
         if self.con:
             self.con.close()
 
+    def get_vacancy_by_id(self, vacancy_id: str = "RUR"):
+        '''получает среднюю зарплату по вакансиям. по умолчанию "RUR" '''
+        try:
+            with self.con:
+                with self.con.cursor() as cur:
+                    cur.execute(f"SELECT * "
+                                f"FROM vacancies "
+                                f"WHERE vacancies.vacancy_id = %s", (vacancy_id, ))
+                    rows = cur.fetchall()
+                    if rows and rows is not None:
+                        return f"{rows[0]}"
+                    else:
+                        print(f"айди {vacancy_id} не существует")
+
+
+        except psycopg2.Error as e:
+            print(f"произошла {e.pgerror}")
+            print(f"код ошибки: {e.pgcode}")
+

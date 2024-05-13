@@ -7,12 +7,18 @@ from src.utils import connector
 from src.utils import tables_creator
 from src.utils import loads_into_table
 from src.utils import drop_table
-
+from src.utils import get_telegra_conf
+from src.telegabot_cls import TelegramBot
 red_col = '\033[91m'
 reset_red_col = '\033[0m'
 
 def main():
     '''пользовательский интерфейс приложения'''
+    tel_conf = get_telegra_conf('telegram_config_file.ini')
+    user_id = tel_conf['user_id']
+    TOKEN = tel_conf['token']
+    mybot = TelegramBot(TOKEN)
+
     con = connector('db_config_file.ini')
     drop_table(con, 'vacancies', 1)
     drop_table(con, 'employers',1)
@@ -42,9 +48,10 @@ def main():
 4 - вывести на экран список всех вакансий, у которых зарплата выше средней по всем вакансиям. (по умолчанию "RUR")
 5 - вывести на экран список всех валют среди загруженных вакансий
 6 - вывести на экран список всех вакансий, в названии которых содержится ключевое слово.
+7 - отправить вакансию по айди через телеграмм.
 0 - завершение программы
 ''')
-        choice_number = ['1', '2', '3', '4', '5', '6', '0']
+        choice_number = ['1', '2', '3', '4', '5', '6', '7', '0']
         user_choice = input(f"{'⛔' * 110}\nВведите номер и нажмите 'enter' для пуска действия: ")
 
         if user_choice and user_choice == '1' and user_choice in choice_number:
@@ -72,6 +79,13 @@ def main():
         elif user_choice and user_choice == '6' and user_choice in choice_number:
             user_input = input('введите ключевое слово: ')
             db_man_inst.get_vacancies_with_keyword(user_input)
+
+        elif user_choice and user_choice == '7' and user_choice in choice_number:
+            user_input = input('введите ID вакансии: ')
+            if len(user_input) < 4 and user_choice.isdigit():
+                vac_by_id = db_man_inst.get_vacancy_by_id(user_input)
+                mybot.send_message(user_id, vac_by_id)
+            else: print(f"{red_col}вы ввели некорректное значение. попробуйте еще раз{reset_red_col}")
 
         elif user_choice and user_choice == '0' and user_choice in choice_number:
             db_man_inst.con_close()

@@ -93,3 +93,12 @@ def drop_table(con, table_name, con_status: int = 0):
         if con_status == 0:
             if con is not None:
                 con.close()
+
+
+def get_telegra_conf(config_file_path):
+    '''коннектор для соединения с БД. при вызове можно передать другие аргументы '''
+    config = configparser.ConfigParser()
+    config.read(config_file_path)
+    database_config = dict(config.items('telegram_config'))
+
+    return database_config
