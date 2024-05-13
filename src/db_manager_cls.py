@@ -8,7 +8,7 @@ class DBManager():
     def __init__(self, con):
         self.con = con
 
-    def get_companies_and_vacancies_count(self):
+    def get_companies_and_vacancies_count(self) -> None:
         '''получает список всех компаний и количество вакансий у каждой компании.'''
         try:
             with self.con:
@@ -24,7 +24,7 @@ class DBManager():
             print(f"произошла {e.pgerror}")
             print(f"код ошибки: {e.pgcode}")
 
-    def get_all_vacancies(self):
+    def get_all_vacancies(self) -> None:
         ''''получает список всех вакансий с указанием названия компании,
         названия вакансии и зарплаты и ссылки на вакансию.'''
         try:
@@ -40,7 +40,7 @@ class DBManager():
             print(f"произошла {e.pgerror}")
             print(f"код ошибки: {e.pgcode}")
 
-    def get_avg_salary(self, currency: str = "RUR"):
+    def get_avg_salary(self, currency: str = "RUR") -> None:
         '''получает среднюю зарплату по вакансиям. по умолчанию "RUR" '''
         try:
             with self.con:
@@ -60,7 +60,7 @@ class DBManager():
             print(f"произошла {e.pgerror}")
             print(f"код ошибки: {e.pgcode}")
 
-    def get_vacancies_with_higher_salary(self, currency: str = "RUR"):
+    def get_vacancies_with_higher_salary(self, currency: str = "RUR") -> None:
         ''' получает список всех вакансий, у которых зарплата выше средней по всем вакансиям. по умолчанию "RUR"'''
         try:
             with self.con:
@@ -78,7 +78,7 @@ class DBManager():
             print(f"произошла {e.pgerror}")
             print(f"код ошибки: {e.pgcode}")
 
-    def get_vacancies_with_keyword(self, keyword):
+    def get_vacancies_with_keyword(self, keyword) -> None:
         '''получает список всех вакансий, в названии которых содержатся переданные в метод слова, например python.'''
         try:
             with self.con:
@@ -94,7 +94,7 @@ class DBManager():
             print(f"произошла {e.pgerror}")
             print(f"код ошибки: {e.pgcode}")
 
-    def get_all_currency(self):
+    def get_all_currency(self) -> None:
         ''''получает список всех вакансий с указанием названия компании,
         названия вакансии и зарплаты и ссылки на вакансию.'''
         try:
@@ -110,12 +110,12 @@ class DBManager():
             print(f"произошла {e.pgerror}")
             print(f"код ошибки: {e.pgcode}")
 
-    def con_close(self):
+    def con_close(self) -> None:
         '''закрывает соединение с БД'''
         if self.con:
             self.con.close()
 
-    def get_vacancy_by_id(self, vacancy_id: str = "RUR"):
+    def get_vacancy_by_id(self, vacancy_id: str = "RUR") -> str:
         '''получает среднюю зарплату по вакансиям. по умолчанию "RUR" '''
         try:
             with self.con:
