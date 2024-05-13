@@ -12,12 +12,7 @@ def connector(config_file_path) -> connection:
     config = configparser.ConfigParser()
     config.read(config_file_path)
     database_config = dict(config.items('database'))
-    conn = psycopg2.connect(
-        host=database_config['host'],
-        database=database_config['database'],
-        user=database_config['user'],
-        password=database_config['password']
-    )
+    conn = psycopg2.connect(**database_config)
     return conn
 
 
