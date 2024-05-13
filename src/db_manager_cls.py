@@ -104,7 +104,7 @@ class DBManager():
                     rows = cur.fetchall()
 
                     for i in rows:
-                        print(f'{red_col}{', '.join(i)}{reset_red_col}')
+                        print(f'{red_col}{", ".join(i)}{reset_red_col}')
 
         except psycopg2.Error as e:
             print(f"произошла {e.pgerror}")
